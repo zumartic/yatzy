@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#102a43">
+  <title>Yatzy-kirjanpito</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">YHTEINEN PELITAULU</p>
+      <h1>Yatzy</h1>
+    </div>
+    <span id="connection-status" class="status-pill">Yhdistetään...</span>
+  </header>
+
+  <main class="page-shell">
+    <section id="setup-view" class="panel setup-panel">
+      <div class="intro-copy">
+        <p class="eyebrow accent">PELAA SAMASSA TAULUSSA</p>
+        <h2>Pidä pisteet kaikkien näkyvillä.</h2>
+        <p>Luo peli ja jaa linkki muille pelaajille. Pisteet päivittyvät heti jokaiselle.</p>
+      </div>
+
+      <form id="create-form" class="name-form">
+        <label for="create-name">Oma nimi</label>
+        <div class="input-action-row">
+          <input id="create-name" name="name" maxlength="24" autocomplete="name" placeholder="Esim. Aino" required>
+          <button class="primary-button" type="submit">Luo peli</button>
+        </div>
+      </form>
+
+      <div id="join-card" class="join-card hidden">
+        <div>
+          <p class="eyebrow">PELIIN LIITTYMINEN</p>
+          <h3>Sinut on kutsuttu mukaan</h3>
+          <p id="join-game-label"></p>
+        </div>
+        <form id="join-form" class="name-form">
+          <label for="join-name">Oma nimi</label>
+          <div class="input-action-row">
+            <input id="join-name" name="name" maxlength="24" autocomplete="name" placeholder="Esim. Eero" required>
+            <button class="primary-button" type="submit">Liity peliin</button>
+          </div>
+        </form>
+      </div>
+      <p id="setup-message" class="message" role="alert"></p>
+    </section>
+
+    <section id="game-view" class="hidden">
+      <div class="game-heading">
+        <div>
+          <div class="game-title-row">
+            <p class="eyebrow accent">PELI <span id="game-code"></span></p>
+            <button id="new-game-button" class="quiet-button" type="button">Uusi peli</button>
+          </div>
+          <div class="share-strip">
+            <div>
+              <strong>Kutsu muut mukaan</strong>
+              <span id="share-link"></span>
+            </div>
+            <button id="copy-link-button" class="secondary-button" type="button">Kopioi linkki</button>
+          </div>
+        </div>
+        <div class="game-actions">
+          <button id="show-results-button" class="secondary-button hidden" type="button">Näytä tulokset</button>
+          <button id="reset-game-button" class="danger-button hidden" type="button">Nollaa peli</button>
+        </div>
+      </div>
+
+      <div id="players-list" class="players-list" aria-live="polite"></div>
+      <p id="game-message" class="message" role="alert"></p>
+
+      <div class="table-wrap panel">
+        <table id="score-table">
+          <thead></thead>
+          <tbody></tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+      <p class="table-hint">Napauta solua ja syötä pisteet. Tyhjä solu tarkoittaa, ettei kohtaa ole vielä pelattu.</p>
+    </section>
+  </main>
+
+  <div id="results-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="results-title">
+    <div class="modal-panel panel">
+      <p class="eyebrow accent">PELI PÄÄTTYI</p>
+      <h2 id="results-title">Tulokset</h2>
+      <ol id="results-list" class="results-list"></ol>
+      <div class="modal-actions">
+        <button id="play-again-button" class="primary-button hidden" type="button">Pelaa uudelleen</button>
+        <button id="close-results-button" class="quiet-button" type="button">Sulje</button>
+      </div>
+    </div>
+  </div>
+
+  <template id="score-input-template">
+    <input class="score-input" type="number" min="0" max="50" inputmode="numeric">
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

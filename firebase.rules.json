@@ -1,0 +1,23 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "games": {
+      "$gameId": {
+        ".validate": "newData.hasChild('players')",
+        "players": {
+          "$playerId": {
+            ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 24"
+          }
+        },
+        "scores": {
+          "$playerId": {
+            "$category": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 50"
+            }
+          }
+        }
+      }
+    }
+  }
+}
