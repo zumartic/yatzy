@@ -72,10 +72,12 @@ input:focus { border-color: var(--primary); outline: 3px solid rgba(49,130,206,.
 .players-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
 .player-chip { align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 99px; display: flex; font-size: .85rem; gap: 7px; padding: 5px 7px 5px 11px; }
 .player-chip.current { border-color: var(--primary); color: var(--primary-dark); font-weight: 700; }
+.player-name { background: none; border: 0; color: inherit; font: inherit; padding: 0; }
+button.player-name { cursor: pointer; }
+button.player-name:hover { text-decoration: underline; }
 .player-chip small { background: var(--primary); border-radius: 99px; color: white; font-size: .65rem; padding: 3px 6px; }
 .player-actions { display: flex; gap: 3px; }
 .player-actions button { background: var(--bg); border: 0; border-radius: 5px; color: var(--text); font-size: .75rem; min-height: 28px; min-width: 28px; padding: 3px 5px; }
-.player-actions button:last-child { background: var(--secondary); color: white; font-size: .65rem; }
 .player-actions button:disabled { cursor: not-allowed; opacity: .35; }
 #game-message { padding-left: 0; }
 .table-wrap { overflow-x: auto; }
@@ -138,7 +140,6 @@ td { min-width: 0; }
   .game-heading h2 { font-size: 1.65rem; }
   .game-actions { align-items: end; flex-direction: column-reverse; gap: 2px; }
   .player-chip { max-width: 100%; }
-  .player-actions button:last-child { font-size: .6rem; }
   .input-action-row { flex-direction: column; }
   .primary-button, .secondary-button, .danger-button { width: 100%; }
   .share-strip { align-items: center; flex-direction: column; margin-inline: auto; max-width: 320px; padding: 12px 14px; text-align: center; }
@@ -148,7 +149,7 @@ td { min-width: 0; }
   .game-heading { align-items: start; }
   .table-wrap { border-radius: 10px; }
   th, td { padding: 6px 2px; }
-  thead th { font-size: 1.1rem; line-height: 1.15; overflow-wrap: anywhere; }
+  thead th { font-size: .8rem; line-height: 1.15; overflow-wrap: anywhere; }
   tbody th { font-size: 1.1rem; line-height: 1.15; width: 31%; }
   .score-input { font-size: 1rem; }
 }

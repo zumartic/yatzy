@@ -215,9 +215,10 @@ function listenToGame() {
 
 function getPlayerOrder(players, savedOrder = []) {
   const order = Array.isArray(savedOrder) ? savedOrder.filter((playerId) => players[playerId]) : [];
-  Object.keys(players).forEach((playerId) => {
-    if (!order.includes(playerId)) order.push(playerId);
-  });
+  const newPlayerIds = Object.keys(players)
+    .filter((playerId) => !order.includes(playerId))
+    .sort((a, b) => (players[a].joinedAt ?? 0) - (players[b].joinedAt ?? 0));
+  order.push(...newPlayerIds);
   return order;
 }
 
@@ -227,8 +228,15 @@ function renderPlayers(players, playerOrder, currentTurnPlayerId, isHost) {
     const player = players[playerId];
     const item = document.createElement("div");
     item.className = `player-chip ${playerId === state.userId ? "current" : ""}`;
-    const name = document.createElement("span");
+    const name = document.createElement(isHost ? "button" : "span");
+    name.className = "player-name";
     name.textContent = `${index + 1}. ${player.name}`;
+    if (isHost) {
+      name.type = "button";
+      name.dataset.playerAction = "turn";
+      name.dataset.playerId = playerId;
+      name.setAttribute("aria-label", `Anna vuoro pelaajalle ${player.name}`);
+    }
     item.append(name);
     if (playerId === currentTurnPlayerId) {
       const turnLabel = document.createElement("small");
@@ -238,7 +246,7 @@ function renderPlayers(players, playerOrder, currentTurnPlayerId, isHost) {
     if (isHost) {
       const actions = document.createElement("span");
       actions.className = "player-actions";
-      actions.innerHTML = `<button type="button" data-player-action="up" data-player-id="${playerId}" aria-label="Siirrä ${player.name} ylemmäs" ${index === 0 ? "disabled" : ""}>↑</button><button type="button" data-player-action="down" data-player-id="${playerId}" aria-label="Siirrä ${player.name} alemmas" ${index === playerOrder.length - 1 ? "disabled" : ""}>↓</button><button type="button" data-player-action="turn" data-player-id="${playerId}">Vuoro</button>`;
+      actions.innerHTML = `<button type="button" data-player-action="up" data-player-id="${playerId}" aria-label="Siirrä ${player.name} ylemmäs" ${index === 0 ? "disabled" : ""}>↑</button><button type="button" data-player-action="down" data-player-id="${playerId}" aria-label="Siirrä ${player.name} alemmas" ${index === playerOrder.length - 1 ? "disabled" : ""}>↓</button>`;
       item.append(actions);
     }
     elements.playersList.append(item);
@@ -261,7 +269,7 @@ function renderScoreTable(players, scores, playerOrder, currentTurnPlayerId, fin
     const cell = document.createElement("th");
     cell.scope = "col";
     cell.classList.toggle("active-turn-column", playerId === currentTurnPlayerId);
-    cell.textContent = playerId === state.userId ? `${player.name} (sinä)` : player.name;
+    cell.textContent = player.name;
     headerRow.append(cell);
   });
   header.append(headerRow);
@@ -426,12 +434,12 @@ async function updateTurnOrOrder(playerId, action) {
   if (!snapshot.exists()) return;
   const game = snapshot.val();
   if (game.hostId !== state.userId) return;
-  const playerOrder = getPlayerOrder(game.players || {}, game.playerOrder);
-  const playerIndex = playerOrder.indexOf(playerId);
   if (action === "turn") {
     await update(ref(database, `games/${state.gameId}`), { currentTurnPlayerId: playerId });
     return;
   }
+  const playerOrder = getPlayerOrder(game.players || {}, game.playerOrder);
+  const playerIndex = playerOrder.indexOf(playerId);
   const targetIndex = action === "up" ? playerIndex - 1 : playerIndex + 1;
   if (playerIndex < 0 || targetIndex < 0 || targetIndex >= playerOrder.length) return;
   [playerOrder[playerIndex], playerOrder[targetIndex]] = [playerOrder[targetIndex], playerOrder[playerIndex]];
