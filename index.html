@@ -11,26 +11,31 @@
   <header class="topbar">
     <div>
       <p class="eyebrow">YHTEINEN PELITAULU</p>
-      <h1>Yatzy</h1>
+      <h1><a id="home-link" class="brand-link" href="#">Yatzy</a></h1>
     </div>
-    <span id="connection-status" class="status-pill">Yhdistetään...</span>
+    <div class="topbar-meta">
+      <span id="game-code-pill" class="status-pill hidden">PELI <span id="game-code"></span></span>
+      <span id="connection-status" class="status-pill">Yhdistetään...</span>
+    </div>
   </header>
 
   <main class="page-shell">
     <section id="setup-view" class="panel setup-panel">
-      <div class="intro-copy">
-        <p class="eyebrow accent">PELAA SAMASSA TAULUSSA</p>
-        <h2>Pidä pisteet kaikkien näkyvillä.</h2>
-        <p>Luo peli ja jaa linkki muille pelaajille. Pisteet päivittyvät heti jokaiselle.</p>
-      </div>
-
-      <form id="create-form" class="name-form">
-        <label for="create-name">Oma nimi</label>
-        <div class="input-action-row">
-          <input id="create-name" name="name" maxlength="24" autocomplete="name" placeholder="Esim. Aino" required>
-          <button class="primary-button" type="submit">Luo peli</button>
+      <div id="create-section">
+        <div class="intro-copy">
+          <p class="eyebrow accent">PELAA SAMASSA TAULUSSA</p>
+          <h2>Pidä pisteet kaikkien näkyvillä.</h2>
+          <p>Luo peli ja jaa linkki muille pelaajille. Pisteet päivittyvät heti jokaiselle.</p>
         </div>
-      </form>
+
+        <form id="create-form" class="name-form">
+          <label for="create-name">Oma nimi</label>
+          <div class="input-action-row">
+            <input id="create-name" name="name" maxlength="24" autocomplete="name" placeholder="Esim. Aino" required>
+            <button class="primary-button" type="submit">Luo peli</button>
+          </div>
+        </form>
+      </div>
 
       <div id="join-card" class="join-card hidden">
         <div>
@@ -50,24 +55,9 @@
     </section>
 
     <section id="game-view" class="hidden">
-      <div class="game-heading">
-        <div>
-          <div class="game-title-row">
-            <p class="eyebrow accent">PELI <span id="game-code"></span></p>
-            <button id="new-game-button" class="quiet-button" type="button">Uusi peli</button>
-          </div>
-          <div class="share-strip">
-            <div>
-              <strong>Kutsu muut mukaan</strong>
-              <span id="share-link"></span>
-            </div>
-            <button id="copy-link-button" class="secondary-button" type="button">Kopioi linkki</button>
-          </div>
-        </div>
-        <div class="game-actions">
-          <button id="show-results-button" class="secondary-button hidden" type="button">Näytä tulokset</button>
-          <button id="reset-game-button" class="danger-button hidden" type="button">Nollaa peli</button>
-        </div>
+      <div class="game-actions">
+        <button id="show-results-button" class="secondary-button hidden" type="button">Näytä tulokset</button>
+        <button id="reset-game-button" class="danger-button hidden" type="button">Nollaa peli</button>
       </div>
 
       <div id="players-list" class="players-list" aria-live="polite"></div>
@@ -81,6 +71,14 @@
         </table>
       </div>
       <p class="table-hint">Napauta solua ja syötä pisteet. Tyhjä solu tarkoittaa, ettei kohtaa ole vielä pelattu.</p>
+
+      <div class="share-strip">
+        <div>
+          <strong>Kutsu muut mukaan</strong>
+          <span id="share-link"></span>
+        </div>
+        <button id="copy-link-button" class="secondary-button" type="button">Kopioi linkki</button>
+      </div>
     </section>
   </main>
 

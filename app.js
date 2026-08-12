@@ -25,6 +25,7 @@ const upperCategories = categories.slice(0, 6);
 const state = { gameId: getGameIdFromUrl(), userId: getOrCreateUserId(), user: null, invalidScoreInput: null, playerOrder: [], currentTurnPlayerId: null, finished: false, isHost: false, resultsDismissed: false };
 const elements = {
   setupView: document.querySelector("#setup-view"),
+  createSection: document.querySelector("#create-section"),
   gameView: document.querySelector("#game-view"),
   createForm: document.querySelector("#create-form"),
   joinForm: document.querySelector("#join-form"),
@@ -37,7 +38,8 @@ const elements = {
   shareLink: document.querySelector("#share-link"),
   copyLink: document.querySelector("#copy-link-button"),
   resetGame: document.querySelector("#reset-game-button"),
-  newGame: document.querySelector("#new-game-button"),
+  homeLink: document.querySelector("#home-link"),
+  gameCodePill: document.querySelector("#game-code-pill"),
   playersList: document.querySelector("#players-list"),
   table: document.querySelector("#score-table"),
   showResults: document.querySelector("#show-results-button"),
@@ -107,8 +109,11 @@ async function startFirebase() {
 function showSetup() {
   elements.setupView.classList.remove("hidden");
   elements.gameView.classList.add("hidden");
-  if (state.gameId) {
-    elements.joinCard.classList.remove("hidden");
+  elements.gameCodePill.classList.add("hidden");
+  const joining = !!state.gameId;
+  elements.createSection.classList.toggle("hidden", joining);
+  elements.joinCard.classList.toggle("hidden", !joining);
+  if (joining) {
     elements.joinGameLabel.textContent = `Pelin tunnus: ${state.gameId}`;
   }
 }
@@ -117,6 +122,7 @@ function showGame(game) {
   elements.setupView.classList.add("hidden");
   elements.gameView.classList.remove("hidden");
   elements.gameCode.textContent = game.id;
+  elements.gameCodePill.classList.remove("hidden");
   const isHost = game.hostId === state.userId;
   const finished = !!game.finished;
   if (finished && !state.finished) state.resultsDismissed = false;
@@ -481,9 +487,7 @@ elements.playersList.addEventListener("click", async (event) => {
   }
 });
 
-elements.newGame.addEventListener("click", () => {
-  window.location.href = window.location.pathname;
-});
+elements.homeLink.href = window.location.pathname;
 
 if (state.gameId) showSetup();
 startFirebase().then((ready) => { if (ready && state.gameId) listenToGame(); });

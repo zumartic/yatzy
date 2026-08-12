@@ -29,6 +29,9 @@ h2 { font-size: clamp(1.8rem, 7vw, 3.25rem); line-height: 1.04; max-width: 640px
 h3 { font-size: 1.25rem; }
 .eyebrow { color: rgba(255,255,255,.65); font-size: .7rem; font-weight: 700; letter-spacing: .13em; margin: 0 0 5px; }
 .eyebrow.accent { color: var(--secondary-dark); }
+.brand-link { color: inherit; text-decoration: none; }
+.brand-link:hover { text-decoration: underline; }
+.topbar-meta { align-items: center; display: flex; gap: 8px; }
 .status-pill { background: rgba(255,255,255,.12); border-radius: 99px; color: rgba(255,255,255,.85); font-size: .75rem; padding: 7px 10px; white-space: nowrap; }
 .status-pill.online { color: #4FD1C5; }
 
@@ -51,7 +54,6 @@ input:focus { border-color: var(--primary); outline: 3px solid rgba(49,130,206,.
 .quiet-button { background: transparent; color: var(--muted); padding-inline: 8px; }
 .danger-button { background: var(--danger); color: white; }
 .danger-button:hover { background: var(--danger-dark); }
-.join-card { border-top: 1px solid var(--line); }
 .join-card > div { padding: 24px 24px 0; }
 .join-card .name-form { padding-top: 16px; }
 .join-card p:last-child { color: var(--muted); margin-bottom: 0; }
@@ -60,12 +62,10 @@ input:focus { border-color: var(--primary); outline: 3px solid rgba(49,130,206,.
 .message.success { color: var(--secondary-dark); }
 
 .game-heading { align-items: end; display: flex; justify-content: space-between; margin: 6px 0 18px; }
-.game-title-row { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
-.game-actions { align-items: center; display: flex; gap: 8px; }
+.game-actions { align-items: center; display: flex; gap: 8px; justify-content: flex-end; margin: 6px 0 18px; }
 .game-heading h2 { font-size: clamp(1.8rem, 6vw, 2.6rem); }
 .game-heading > div:first-child { min-width: 0; }
-.game-heading .share-strip { margin: 8px 0 0; }
-.share-strip { align-items: center; background: var(--secondary); border-radius: 12px; display: flex; gap: 16px; justify-content: space-between; margin-bottom: 16px; padding: 14px 16px; }
+.share-strip { align-items: center; background: var(--secondary); border-radius: 12px; display: flex; gap: 16px; justify-content: space-between; margin: 18px 0 0; padding: 14px 16px; }
 .share-strip div { min-width: 0; }
 .share-strip strong, .share-strip span { display: block; }
 .share-strip span { color: rgba(255,255,255,.85); font-size: .78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -141,7 +141,10 @@ td { min-width: 0; }
   .player-actions button:last-child { font-size: .6rem; }
   .input-action-row { flex-direction: column; }
   .primary-button, .secondary-button, .danger-button { width: 100%; }
-  .share-strip { align-items: stretch; flex-direction: column; }
+  .share-strip { align-items: center; flex-direction: column; margin-inline: auto; max-width: 320px; padding: 12px 14px; text-align: center; }
+  .share-strip div { width: 100%; }
+  .share-strip span { white-space: normal; word-break: break-all; }
+  .share-strip .secondary-button { width: auto; }
   .game-heading { align-items: start; }
   .table-wrap { border-radius: 10px; }
   th, td { padding: 6px 2px; }

@@ -11,27 +11,19 @@
   <header class="topbar">
     <div>
       <p class="eyebrow">YHTEINEN PELITAULU</p>
-      <h1>Yatzy</h1>
+      <h1><a class="brand-link" href="#">Yatzy</a></h1>
     </div>
-    <span class="status-pill online">Testinäkymä</span>
+    <div class="topbar-meta">
+      <span class="status-pill">PELI TESTI123</span>
+      <span class="status-pill online">Testinäkymä</span>
+    </div>
   </header>
 
   <main class="page-shell">
     <section>
-      <div class="game-heading">
-        <div>
-          <p class="eyebrow accent">PELI TESTI123</p>
-          <h2>Yhteinen Yatzy-peli</h2>
-        </div>
-        <button class="quiet-button" type="button">Uusi peli</button>
-      </div>
-
-      <div class="share-strip">
-        <div>
-          <strong>Kutsu muut mukaan</strong>
-          <span>https://yatzy.example.com/?game=TESTI123</span>
-        </div>
-        <button class="secondary-button" type="button">Kopioi linkki</button>
+      <div class="game-actions">
+        <button class="secondary-button" type="button">Näytä tulokset</button>
+        <button class="danger-button" type="button">Nollaa peli</button>
       </div>
 
       <div class="players-list" aria-label="Pelaajat">
@@ -77,6 +69,14 @@
         </table>
       </div>
       <p class="table-hint">Staattinen neljän pelaajan testinäkymä mobiiliasettelun tarkistamiseen.</p>
+
+      <div class="share-strip">
+        <div>
+          <strong>Kutsu muut mukaan</strong>
+          <span>https://yatzy.example.com/?game=TESTI123</span>
+        </div>
+        <button class="secondary-button" type="button">Kopioi linkki</button>
+      </div>
     </section>
   </main>
 </body>
