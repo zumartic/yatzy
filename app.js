@@ -22,7 +22,7 @@ const categories = [
 ];
 const upperCategories = categories.slice(0, 6);
 
-const state = { gameId: getGameIdFromUrl(), userId: getOrCreateUserId(), user: null, invalidScoreInput: null, playerOrder: [], currentTurnPlayerId: null, finished: false };
+const state = { gameId: getGameIdFromUrl(), userId: getOrCreateUserId(), user: null, invalidScoreInput: null, playerOrder: [], currentTurnPlayerId: null, finished: false, isHost: false, resultsDismissed: false };
 const elements = {
   setupView: document.querySelector("#setup-view"),
   gameView: document.querySelector("#game-view"),
@@ -119,7 +119,10 @@ function showGame(game) {
   elements.gameCode.textContent = game.id;
   const isHost = game.hostId === state.userId;
   const finished = !!game.finished;
+  if (finished && !state.finished) state.resultsDismissed = false;
+  if (!finished) state.resultsDismissed = false;
   state.finished = finished;
+  state.isHost = isHost;
   elements.resetGame.classList.toggle("hidden", !isHost);
   elements.showResults.classList.toggle("hidden", !isHost || finished);
   elements.shareLink.textContent = getShareUrl(game.id);
@@ -129,7 +132,7 @@ function showGame(game) {
   state.currentTurnPlayerId = currentTurnPlayerId;
   renderPlayers(game.players || {}, playerOrder, currentTurnPlayerId, isHost);
   renderScoreTable(game.players || {}, game.scores || {}, playerOrder, currentTurnPlayerId, finished);
-  elements.resultsModal.classList.toggle("hidden", !finished);
+  elements.resultsModal.classList.toggle("hidden", !finished || state.resultsDismissed);
   if (finished) {
     elements.playAgain.classList.toggle("hidden", !isHost);
     renderResults(game.players || {}, game.scores || {}, playerOrder);
@@ -313,11 +316,12 @@ function createScoreCell(playerId, category, value, isActiveTurn, finished) {
   const input = document.querySelector("#score-input-template").content.firstElementChild.cloneNode(true);
   input.value = value ?? "";
   input.dataset.playerId = playerId;
+  const hadValue = value !== null && value !== undefined;
   input.disabled = finished || !isActiveTurn;
   input.placeholder = "";
   input.setAttribute("aria-label", `${category.label}, ${playerId === state.userId ? "oma" : "pelaaja"}`);
   input.addEventListener("input", () => validateScoreInput(input, category));
-  input.addEventListener("change", () => saveScore(playerId, category, input.value));
+  input.addEventListener("change", () => saveScore(playerId, category, input.value, hadValue));
   cell.append(input);
   return cell;
 }
@@ -343,14 +347,14 @@ function setScoreInputsLocked(locked, activeInput = null) {
   });
 }
 
-async function saveScore(playerId, category, rawValue) {
+async function saveScore(playerId, category, rawValue, hadValue) {
   if (state.finished) return;
   const input = document.activeElement;
   if (state.invalidScoreInput || (input?.classList.contains("score-input") && !validateScoreInput(input, category))) return;
   const value = rawValue === "" ? null : Number(rawValue);
   const scoreRef = ref(database, `games/${state.gameId}/scores/${playerId}/${category.id}`);
   await set(scoreRef, value);
-  if (value !== null) await advanceTurn();
+  if (value !== null && !hadValue) await advanceTurn();
   showMessage(elements.gameMessage, "Piste tallennettu.", "success");
 }
 
@@ -384,6 +388,11 @@ async function showResults() {
 
 async function closeResults() {
   if (!state.gameId) return;
+  if (!state.isHost) {
+    state.resultsDismissed = true;
+    elements.resultsModal.classList.add("hidden");
+    return;
+  }
   try {
     await update(ref(database, `games/${state.gameId}`), { finished: false });
   } catch (error) {
