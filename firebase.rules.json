@@ -1,8 +1,8 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null",
     "games": {
+      ".read": "auth != null",
+      ".write": "auth != null",
       "$gameId": {
         ".validate": "newData.hasChild('players')",
         "players": {
