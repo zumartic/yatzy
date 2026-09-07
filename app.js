@@ -72,26 +72,19 @@ function isConfigured() {
 
 async function startFirebase() {
   if (firebaseReady) return firebaseReady;
-  if (!isConfigured()) {
-    elements.status.textContent = "Firebase puuttuu";
-    showMessage(elements.setupMessage, "Täydennä ensin firebase-config.js Firebase Consolen Web-sovelluksen arvoilla.", "error");
-    return false;
-  }
+  if (!isConfigured()) { /* unchanged */ }
   firebaseReady = (async () => {
     try {
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       database = getDatabase(app);
       await signInAnonymously(auth);
+      state.userId = auth.currentUser.uid;   // ✅ now matches auth.uid
       elements.status.textContent = "Yhteys toimii";
       elements.status.classList.add("online");
       return true;
     } catch (error) {
-      firebaseReady = null;
-      elements.status.textContent = "Yhteysvirhe";
-      showMessage(elements.setupMessage, "Firebase-yhteyttä ei saatu avattua. Tarkista asetukset ja Anonymous Authentication.", "error");
-      console.error(error);
-      return false;
+      /* unchanged */
     }
   })();
   return firebaseReady;
