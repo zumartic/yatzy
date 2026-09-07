@@ -22,7 +22,8 @@ const categories = [
 ];
 const upperCategories = categories.slice(0, 6);
 
-const state = { gameId: getGameIdFromUrl(), userId: getOrCreateUserId(), user: null, invalidScoreInput: null, playerOrder: [], currentTurnPlayerId: null, finished: false, isHost: false, resultsDismissed: false };
+const state = { gameId: getGameIdFromUrl(), userId: null, user: null, ... };
+
 const elements = {
   setupView: document.querySelector("#setup-view"),
   createSection: document.querySelector("#create-section"),
@@ -54,16 +55,6 @@ let firebaseReady;
 
 function getGameIdFromUrl() {
   return new URLSearchParams(window.location.search).get("game");
-}
-
-function getOrCreateUserId() {
-  const key = "yatzy-player-id";
-  let userId = localStorage.getItem(key);
-  if (!userId) {
-    userId = crypto.randomUUID();
-    localStorage.setItem(key, userId);
-  }
-  return userId;
 }
 
 function makeGameId() {
