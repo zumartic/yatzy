@@ -167,6 +167,7 @@ function getShareUrl(gameId) {
 
 async function createGame(name) {
   const gameId = makeGameId();
+  console.log("writing as uid:", state.userId, "path:", `games/${gameId}`);
   const game = { id: gameId, hostId: state.userId, createdAt: Date.now(), players: { [state.userId]: { name } }, playerOrder: [state.userId], currentTurnPlayerId: state.userId, scores: {} };
   await set(ref(database, `games/${gameId}`), game);
   state.gameId = gameId;
