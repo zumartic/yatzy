@@ -22,7 +22,7 @@ const categories = [
 ];
 const upperCategories = categories.slice(0, 6);
 
-const state = { gameId: getGameIdFromUrl(), userId: null, user: null, ... };
+const state = { gameId: getGameIdFromUrl(), userId: null, user: null, ...};
 
 const elements = {
   setupView: document.querySelector("#setup-view"),
