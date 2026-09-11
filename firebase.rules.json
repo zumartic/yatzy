@@ -50,8 +50,8 @@
         },
 
         "currentTurnPlayerId": {
-          ".write": "auth != null && data.parent().child('players').child(auth.uid).exists()",
-          ".validate": "newData.isString() && data.parent().child('players').child(newData.val()).exists()"
+          ".write": "auth != null && newData.parent().child('players').child(auth.uid).exists()",
+          ".validate": "newData.isString() && newData.parent().child('players').child(newData.val()).exists()"
         },
 
         "playerOrder": {

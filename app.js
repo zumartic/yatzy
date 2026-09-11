@@ -194,7 +194,7 @@ function listenToGame() {
       return;
     }
     showGame(game);
-  }, () => showMessage(elements.gameMessage, "Pelin tietojen lukeminen epäonnistui.", "error"));
+  }, () => showSetup());
 }
 
 function getPlayerOrder(players, savedOrder = []) {
