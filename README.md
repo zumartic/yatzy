@@ -10,7 +10,9 @@ Mobiilille sopiva, jaettavalla linkillä toimiva Yatzy-pisteiden seuranta.
 4. Valitse **Build -> Authentication -> Sign-in method** ja ota **Anonymous** käyttöön.
 5. Kopioi Web-sovelluksen asetukset tiedostoon `firebase-config.js`.
 6. Jos tietokannan osoite ei ole oletusarvoinen, kopioi se Firebase Consolen Realtime Database -näkymästä `databaseURL`-arvoksi.
-7. Avaa Realtime Databasen **Rules**-välilehti ja korvaa säännöt tiedoston `firebase.rules.json` sisällöllä. Julkaise säännöt. Säännöissä ei vaadita tyhjää `scores`-haaraa pelin luontivaiheessa, koska Realtime Database ei tallenna tyhjää objektia.
+7. Avaa Realtime Databasen **Rules**-välilehti ja korvaa säännöt tiedoston `firebase.rules.json` sisällöllä. Valitse lopuksi **Publish**. Säännöissä ei vaadita tyhjää `scores`-haaraa pelin luontivaiheessa, koska Realtime Database ei tallenna tyhjää objektia.
+
+Säännöt sitovat pelaajan Firebase Authenticationin käyttäjätunnukseen. Peliä voi lukea vasta liittymisen jälkeen, ja jaetun pelilinkin saanut kirjautunut käyttäjä voi lisätä peliin vain oman pelaajarivinsä. Uudet säännöt ja päivitetty selainkoodi pitää julkaista samalla kertaa; vanhalla selainkoodilla luodut keskeneräiset pelit eivät käytä Auth-tunnuksia eivätkä siksi avaudu uusilla säännöillä.
 
 Firebase Web API -avaimen voi huoletta olla selainkoodissa. Tietoturva tehdään Authenticationilla ja Realtime Database -säännöillä, ei avaimen piilottamisella.
 

@@ -1,21 +1,70 @@
 {
   "rules": {
+    ".read": false,
+    ".write": false,
+
     "games": {
-      ".read": "auth != null",
-      ".write": "auth != null",
       "$gameId": {
-        ".validate": "newData.hasChild('players')",
+        ".read": "auth != null && data.child('players').child(auth.uid).exists()",
+
+        ".write": "auth != null && !data.exists() && newData.child('hostId').val() === auth.uid && newData.child('players').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['id', 'hostId', 'players']) && newData.child('id').val() === $gameId && newData.child('hostId').isString() && ((!data.exists() && newData.child('hostId').val() === auth.uid) || (data.exists() && newData.child('hostId').val() === data.child('hostId').val()))",
+
+        "id": {
+          ".validate": "newData.isString() && newData.val() === $gameId"
+        },
+
+        "hostId": {
+          ".validate": "newData.isString()"
+        },
+
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+
         "players": {
           "$playerId": {
-            ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 24"
-          }
-        },
-        "scores": {
-          "$playerId": {
-            "$category": {
-              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 50"
+            ".write": "auth != null && ((auth.uid === $playerId && !data.exists() && data.parent().parent().child('hostId').isString()) || data.parent().parent().child('hostId').val() === auth.uid)",
+            ".validate": "newData.hasChildren(['name'])",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 24"
+            },
+            "joinedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
             }
           }
+        },
+
+        "scores": {
+          ".write": "auth != null && data.parent().child('hostId').val() === auth.uid",
+          "$playerId": {
+            ".write": "auth != null && (auth.uid === $playerId || data.parent().parent().child('hostId').val() === auth.uid)",
+            "$category": {
+              ".write": "auth != null && (auth.uid === $playerId || data.parent().parent().parent().child('hostId').val() === auth.uid)",
+              ".validate": "!newData.exists() || (newData.isNumber() && newData.val() >= 0 && newData.val() <= 50)"
+            }
+          }
+        },
+
+        "currentTurnPlayerId": {
+          ".write": "auth != null && data.parent().child('players').child(auth.uid).exists()",
+          ".validate": "newData.isString() && data.parent().child('players').child(newData.val()).exists()"
+        },
+
+        "playerOrder": {
+          ".write": "auth != null && data.parent().child('hostId').val() === auth.uid"
+        },
+
+        "finished": {
+          ".write": "auth != null && data.parent().child('hostId').val() === auth.uid",
+          ".validate": "newData.isBoolean()"
+        },
+
+        "$other": {
+          ".validate": false
         }
       }
     }

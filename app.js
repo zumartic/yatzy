@@ -23,7 +23,6 @@ const categories = [
 const upperCategories = categories.slice(0, 6);
 
 const state = { gameId: getGameIdFromUrl(), userId: null, user: null, invalidScoreInput: null, playerOrder: [], currentTurnPlayerId: null, finished: false, isHost: false, resultsDismissed: false };
-
 const elements = {
   setupView: document.querySelector("#setup-view"),
   createSection: document.querySelector("#create-section"),
@@ -72,19 +71,27 @@ function isConfigured() {
 
 async function startFirebase() {
   if (firebaseReady) return firebaseReady;
-  if (!isConfigured()) { /* unchanged */ }
+  if (!isConfigured()) {
+    elements.status.textContent = "Firebase puuttuu";
+    showMessage(elements.setupMessage, "Täydennä ensin firebase-config.js Firebase Consolen Web-sovelluksen arvoilla.", "error");
+    return false;
+  }
   firebaseReady = (async () => {
     try {
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       database = getDatabase(app);
-      await signInAnonymously(auth);
-      state.userId = auth.currentUser.uid;   // ✅ now matches auth.uid
+      const credential = await signInAnonymously(auth);
+      state.userId = credential.user.uid;
       elements.status.textContent = "Yhteys toimii";
       elements.status.classList.add("online");
       return true;
     } catch (error) {
-      /* unchanged */
+      firebaseReady = null;
+      elements.status.textContent = "Yhteysvirhe";
+      showMessage(elements.setupMessage, "Firebase-yhteyttä ei saatu avattua. Tarkista asetukset ja Anonymous Authentication.", "error");
+      console.error(error);
+      return false;
     }
   })();
   return firebaseReady;
@@ -160,7 +167,6 @@ function getShareUrl(gameId) {
 
 async function createGame(name) {
   const gameId = makeGameId();
-  console.log("writing as uid:", state.userId, "path:", `games/${gameId}`);
   const game = { id: gameId, hostId: state.userId, createdAt: Date.now(), players: { [state.userId]: { name } }, playerOrder: [state.userId], currentTurnPlayerId: state.userId, scores: {} };
   await set(ref(database, `games/${gameId}`), game);
   state.gameId = gameId;
@@ -170,14 +176,7 @@ async function createGame(name) {
 }
 
 async function joinGame(name) {
-  const gameSnapshot = await new Promise((resolve, reject) => {
-    onValue(ref(database, `games/${state.gameId}`), resolve, reject, { onlyOnce: true });
-  });
-  if (!gameSnapshot.exists()) {
-    showMessage(elements.setupMessage, "Tätä peliä ei löytynyt. Tarkista linkki.", "error");
-    return;
-  }
-  await update(ref(database, `games/${state.gameId}/players/${state.userId}`), { name, joinedAt: Date.now() });
+  await set(ref(database, `games/${state.gameId}/players/${state.userId}`), { name, joinedAt: Date.now() });
   state.user = { name };
   listenToGame();
 }
